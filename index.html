@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cupping Café</title>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#6750A4" />
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; background: #fafafa; }
+    header { padding: 16px; background: #6750A4; color: #fff; }
+    main { padding: 16px; max-width: 600px; margin: 0 auto; }
+    .card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .section-title { font-weight: 600; margin-bottom: 8px; }
+    .row { display: flex; justify-content: space-between; align-items: center; margin: 8px 0; }
+    .row label { font-size: 0.9rem; }
+    .row input[type="number"] { width: 56px; padding: 4px; }
+    .slider { width: 100%; }
+    textarea { width: 100%; min-height: 80px; padding: 8px; border-radius: 8px; border: 1px solid #ddd; }
+    .score-final { font-size: 1.4rem; font-weight: 700; text-align: center; }
+    .fab { position: fixed; bottom: 16px; right: 16px; background: #6750A4; color: #fff; border-radius: 999px; padding: 12px 20px; border: none; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Cupping Café</h1>
+    <div style="font-size:0.9rem;opacity:0.9;">Session de dégustation</div>
+  </header>
+
+  <main>
+    <section class="card">
+      <div class="section-title">Café</div>
+      <input id="coffeeName" type="text" placeholder="Nom du café / lot" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ddd;">
+    </section>
+
+    <section class="card">
+      <div class="section-title">Roast level (6–10)</div>
+      <div class="row">
+        <label for="roastScore">Score</label>
+        <input id="roastScore" type="number" min="6" max="10" value="8" oninput="updateFromInput('roastScore','roastRange')">
+      </div>
+      <input id="roastRange" class="slider" type="range" min="6" max="10" value="8" oninput="updateFromRange('roastRange','roastScore')">
+    </section>
+
+    <section class="card">
+      <div class="section-title">Fragrance / Arômes (6–10)</div>
+      <div class="row">
+        <label for="fragranceScore">Score</label>
+        <input id="fragranceScore" type="number" min="6" max="10" value="8" oninput="updateFromInput('fragranceScore','fragranceRange')">
+      </div>
+      <input id="fragranceRange" class="slider" type="range" min="6" max="10" value="8" oninput="updateFromRange('fragranceRange','fragranceScore')">
+      <small>Plus tard : sélecteur d'arômes basé sur la roue des saveurs.</small>
+    </section>
+
+    <section class="card">
+      <div class="section-title">Flavor (6–10)</div>
+      <div class="row">
+        <label for="flavorScore">Score</label>
+        <input id="flavorScore" type="number" min="6" max="10" value="8" oninput="updateFromInput('flavorScore','flavorRange')">
+      </div>
+      <input id="flavorRange" class="slider" type="range" min="6" max="10" value="8" oninput="updateFromRange('flavorRange','flavorScore')">
+    </section>
+
+    <section class="card">
+      <div class="section-title">Aftertaste (6–10)</div>
+      <div class="row">
+        <label for="aftertasteScore">Score</label>
+        <input id="aftertasteScore" type="number" min="6" max="10" value="8" oninput="updateFromInput('aftertasteScore','aftertasteRange')">
+      </div>
+      <input id="aftertasteRange" class="slider" type="range" min="6" max="10" value="8" oninput="updateFromRange('aftertasteRange','aftertasteScore')">
+    </section>
+
+    <section class="card">
+      <div class="section-title">Acidité (6–10)</div>
+      <div class="row">
+        <label for="acidityScore">Score</label>
+        <input id="acidityScore" type="number" min="6" max="10" value="8" oninput="updateFromInput('acidityScore','acidityRange')">
+      </div>
+      <input id="acidityRange" class="slider" type="range" min="6" max="10" value="8" oninput="updateFromRange('acidityRange','acidityScore')">
+    </section>
+
+    <section class="card">
+      <div class="section-title">Body (6–10)</div>
+      <div class="row">
+        <label for="bodyScore">Score</label>
+        <input id="bodyScore" type="number" min="6" max="10" value="8" oninput="updateFromInput('bodyScore','bodyRange')">
+      </div>
+      <input id="bodyRange" class="slider" type="range" min="6" max="10" value="8" oninput="updateFromRange('bodyRange','bodyScore')">
+      <small>Plus tard : sélecteurs « sensation en bouche », « viscosité », etc.</small>
+    </section>
+
+    <section class="card">
+      <div class="section-title">Balance (6–10)</div>
+      <div class="row">
+        <label for="balanceScore">Score</label>
+        <input id="balanceScore" type="number" min="6" max="10" value="8" oninput="updateFromInput('balanceScore','balanceRange')">
+      </div>
+      <input id="balanceRange" class="slider" type="range" min="6" max="10" value="8" oninput="updateFromRange('balanceRange','balanceScore')">
+    </section>
+
+    <section class="card">
+      <div class="section-title">Uniformité / Clean cup / Sucrosité (6–10)</div>
+      <div class="row">
+        <label for="uniformityScore">Uniformité</label>
+        <input id="uniformityScore" type="number" min="6" max="10" value="8" oninput="updateFinal()">
+      </div>
+      <div class="row">
+        <label for="cleanScore">Clean cup</label>
+        <input id="cleanScore" type="number" min="6" max="10" value="8" oninput="updateFinal()">
+      </div>
+      <div class="row">
+        <label for="sweetnessScore">Sucrosité</label>
+        <input id="sweetnessScore" type="number" min="6" max="10" value="8" oninput="updateFinal()">
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">Overall (6–10)</div>
+      <div class="row">
+        <label for="overallScore">Note globale</label>
+        <input id="overallScore" type="number" min="6" max="10" value="8" oninput="updateFinal()">
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">Commentaires</div>
+      <textarea id="comments" placeholder="Notes de dégustation..."></textarea>
+    </section>
+
+    <section class="card">
+      <div class="section-title">Score final</div>
+      <div id="finalScore" class="score-final">0.0</div>
+    </section>
+  </main>
+
+  <button class="fab" onclick="updateFinal()">Recalculer</button>
+
+  <script>
+    const fieldsForAverage = [
+      'roastScore','fragranceScore','flavorScore','aftertasteScore',
+      'acidityScore','bodyScore','balanceScore',
+      'uniformityScore','cleanScore','sweetnessScore','overallScore'
+    ];
+
+    function clamp(val) {
+      const n = Number(val);
+      if (Number.isNaN(n)) return 6;
+      return Math.min(10, Math.max(6, n));
+    }
+
+    function updateFromRange(rangeId, inputId) {
+      const v = document.getElementById(rangeId).value;
+      document.getElementById(inputId).value = v;
+      updateFinal();
+    }
+
+    function updateFromInput(inputId, rangeId) {
+      const input = document.getElementById(inputId);
+      const v = clamp(input.value);
+      input.value = v;
+      document.getElementById(rangeId).value = v;
+      updateFinal();
+    }
+
+    function updateFinal() {
+      let sum = 0;
+      fieldsForAverage.forEach(id => {
+        const el = document.getElementById(id);
+        sum += clamp(el.value);
+      });
+      const avg = sum / fieldsForAverage.length;
+      document.getElementById('finalScore').textContent = avg.toFixed(1);
+    }
+
+    updateFinal();
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+  </script>
+</body>
+</html>
